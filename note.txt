@@ -1,0 +1,129 @@
+1、以Unicode表示的str通过encode()方法可以编码为指定的bytes，例如：
+	>>> 'ABC'.encode('ascii')
+	b'ABC'
+	>>> '中文'.encode('utf-8')
+	b'\xe4\xb8\xad\xe6\x96\x87'
+	>>> '中文'.encode('ascii')
+	Traceback (most recent call last):
+	  File "<stdin>", line 1, in <module>
+	UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordinal not in range(128)
+
+2、反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是bytes。要把bytes变为str，就需要用decode()方法：
+	>>> b'ABC'.decode('ascii')
+	'ABC'
+	>>> b'\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8')
+	'中文'
+3、要计算str包含多少个字符，可以用len()函数：len()函数计算的是str的字符数，如果换成bytes，len()函数就计算字节数：
+
+4、由于Python源代码也是一个文本文件，所以，当你的源代码中包含中文的时候，在保存源代码时，就需要务必指定保存为UTF-8编码。当Python解释器读取源代码时，为了让它按UTF-8编码读取，我们通常在文件开头写上这两行：
+	#!/usr/bin/env python3
+	# -*- coding: utf-8 -*-
+
+5、在Python中，采用的格式化方式和C语言是一致的，用%实现，举例如下：
+	>>> 'Hello, %s' % 'world'
+	'Hello, world'
+	>>> 'Hi, %s, you have $%d.' % ('Michael', 1000000)
+	'Hi, Michael, you have $1000000.'
+
+6、format():它会用传入的参数依次替换字符串内的占位符{0}、{1}……，不过这种方式写起来比%要麻烦得多：
+	>>> 'Hello, {0}, 成绩提升了 {1:.1f}%'.format('小明', 17.125)
+	'Hello, 小明, 成绩提升了 17.1%'
+
+7、input()返回的数据类型是str，str不能直接和整数比较，必须先把str转换成整数。Python提供了int()函数来完成这件事情：
+
+8、range()函数生成一个整数序列，如range(5)生成的序列是从0来时小于5的整数；
+
+9、对于可变对象，比如list，对list进行操作，list内部的内容是会变化的，比如：
+
+	>>> a = ['c', 'b', 'a']
+	>>> a.sort()
+	>>> a
+	['a', 'b', 'c']
+
+
+10、而对于不可变对象，比如str，对str进行操作呢：
+	>>> a = 'abc'
+	>>> a.replace('a', 'A')
+	'Abc'
+	>>> a
+	'abc'
+
+	>>> a = 'abc'
+	>>> a.replace('a', 'A')
+	'Abc'
+	>>> a
+	'abc'
+
+
+
+
+11、abs()取绝对值
+
+
+12、max函数max()可以接收任意多个参数，并返回最大的那个：
+
+13、函数名其实就是指向一个函数对象的引用，完全可以把函数名赋给一个变量，相当于给这个函数起了一个“别名”：
+	>>> a = abs # 变量a指向abs函数
+	>>> a(-1) # 所以也可以通过a调用abs函数
+	1
+
+14、定义函数用def：
+	def my_abs(x):
+	    if x >= 0:
+	        return x
+	    else:
+	        return -x
+
+15、这个时候，默认参数就排上用场了。由于我们经常计算x2，所以，完全可以把第二个参数n的默认值设定为2：
+	def power(x, n=2):
+	    s = 1
+	    while n > 0:
+	        n = n - 1
+	        s = s * x
+	    return s
+
+	>>> power(5)
+	25
+	>>> power(5, 2)
+	25
+
+
+16、解决递归调用栈溢出的方法是通过尾递归优化：尾递归是指，在函数返回的时候，调用自身本身，并且，return语句不能包含表达式。这样，编译器或者解释器就可以把尾递归做优化，使递归本身无论调用多少次，都只占用一个栈帧，不会出现栈溢出的情况。遗憾的是，大多数编程语言没有针对尾递归做优化，Python解释器也没有做优化，所以，即使把上面的fact(n)函数改成尾递归方式，也会导致栈溢出。
+	def fact(n):
+	    return fact_iter(n, 1)
+
+	def fact_iter(num, product):
+	    if num == 1:
+	        return product
+	    return fact_iter(num - 1, num * product)
+
+
+17、list或tuple取部分连续元素是用切片的方法更快捷
+
+18、列表生成式：
+	>>> [x * x for x in range(1, 11)]
+	[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+
+
+	>>> [x * x for x in range(1, 11) if x % 2 == 0]
+	[4, 16, 36, 64, 100]
+
+
+	>>> [m + n for m in 'ABC' for n in 'XYZ']
+	['AX', 'AY', 'AZ', 'BX', 'BY', 'BZ', 'CX', 'CY', 'CZ']
+
+
+	>>> import os # 导入os模块，模块的概念后面讲到
+	>>> [d for d in os.listdir('.')] # os.listdir可以列出文件和目录
+	['.emacs.d', '.ssh', '.Trash', 'Adlm', 'Applications', 'Desktop', 'Documents', 'Downloads', 'Library', 'Movies', 'Music', 'Pictures', 'Public', 'VirtualBox VMs', 'Workspace', 'XCode']
+
+19、字符串的lower()方法： 将大写字母变为小写
+
+
+20、使用内建的isinstance函数可以判断一个变量是不是字符串：
+	>>> x = 'abc'
+	>>> y = 123
+	>>> isinstance(x, str)
+	True
+	>>> isinstance(y, str)
+	False
